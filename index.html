@@ -59,11 +59,11 @@
             item.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
             item.innerHTML = `
                 <div class="timeline-card" onclick="openModal(${index})">
-                    <h3>${card.title}</h3>Create timeline.html for Mansu website
+                    <h3>${card.title}</h3>
                     <div class="date">${card.date}</div>
                     <div class="preview">${card.preview}</div>
                 </div>
-                <div class="timeline-heart">❤️</div>
+                <div class="timeline-heart">❤️</div><footer>Made with ❤️ for my Mansu/Milky</footer>
             `;
             timeline.appendChild(item);
         });
