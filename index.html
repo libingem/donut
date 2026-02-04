@@ -6,23 +6,29 @@
     <title>Our Beautiful Journey Together, Mansi</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Georgia', serif; background: linear-gradient(135deg, #ffeef8 0%, #ffe5f1 25%, #ffd4e8 50%, #ffc4df 75%, #ffb5d6 100%); min-height: 100vh; padding: 20px; overflow-x: hidden; }
+        body { font-family: 'Georgia', serif; background: linear-gradient(135deg, #ffeef8 0%, #ffe5f1 25%, #ffd4e8 50%, #ffc4df 75%, #ffb5d6 100%); min-height: 100vh; padding: 20px; overflow-x: hidden; position: relative; }
         .header { text-align: center; padding: 40px 20px; margin-bottom: 60px; }
         .header h1 { font-size: 3em; color: #d63384; margin-bottom: 15px; }
         .header p { font-size: 1.3em; color: #8b4789; font-style: italic; }
-        .music-player { position: fixed; top: 20px; right: 20px; z-index: 1000; background: rgba(255, 255, 255, 0.9); padding: 10px 15px; border-radius: 50px; display: flex; align-items: center; gap: 10px; }
+        .music-player { position: fixed; top: 20px; right: 20px; z-index: 1000; background: rgba(255, 255, 255, 0.9); padding: 10px 15px; border-radius: 50px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .music-player button { background: #d63384; border: none; color: white; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; }
         .timeline-container { max-width: 1000px; margin: 0 auto; position: relative; padding: 40px 0; }
         .timeline-line { position: absolute; left: 50%; transform: translateX(-50%); width: 4px; height: 100%; background: #d63384; }
         .timeline-item { position: relative; margin-bottom: 80px; display: flex; justify-content: space-between; align-items: center; }
-        .timeline-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(214, 51, 132, 0.2); width: 42%; cursor: pointer; }
+        .timeline-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(214, 51, 132, 0.2); width: 42%; cursor: pointer; transition: transform 0.3s; }
+        .timeline-card:hover { transform: scale(1.05); }
         .timeline-card h3 { color: #d63384; margin-bottom: 10px; }
+        .timeline-card .date { color: #8b4789; font-weight: bold; margin-bottom: 10px; font-size: 0.9em; }
         .timeline-heart { position: absolute; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; background: #d63384; border: 4px solid white; border-radius: 50%; z-index: 10; display: flex; align-items: center; justify-content: center; color: white; }
         .timeline-item.left .timeline-card { margin-right: auto; }
         .timeline-item.right .timeline-card { margin-left: auto; }
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); overflow: auto; }
-        .modal-content { background: white; margin: 5% auto; padding: 40px; border-radius: 20px; max-width: 700px; position: relative; }
+        .modal-content { background: white; margin: 5% auto; padding: 40px; border-radius: 20px; max-width: 700px; position: relative; animation: pop 0.3s ease; }
+        @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .close { position: absolute; top: 20px; right: 30px; font-size: 40px; color: #d63384; cursor: pointer; }
+        footer { text-align: center; padding: 40px; color: #d63384; font-family: Georgia; font-style: italic; width: 100%; clear: both; }
+        .floating-heart { position: fixed; bottom: -10px; color: #ff6ba9; font-size: 20px; animation: floatUp 4s linear forwards; z-index: -1; opacity: 0.6; pointer-events: none; }
+        @keyframes floatUp { to { transform: translateY(-110vh); opacity: 0; } }
         @media (max-width: 768px) { .timeline-line { left: 30px; } .timeline-card { width: calc(100% - 80px); margin-left: 60px !important; } .timeline-heart { left: 30px; } }
     </style>
 </head>
@@ -30,9 +36,9 @@
     <div class="music-player"><button id="playPauseBtn" onclick="toggleMusic()">▶</button><span>Mansu's Song</span></div>
     <audio id="bgMusic" loop></audio>
     <div class="header"><h1>Our Beautiful Journey Together, Mansi</h1><p>Every moment with you is special ❤️</p></div>
-    <div class="timeline-container"><div class="timeline-line"></div>
-    <div id="timeline"></div></div>
-    <div id="myModal" class="modal"><div class="modal-content"><span class="close" onclick="closeModal()">&times;</span><h2 id="modalTitle"></h2><div class="date" id="modalDate" style="color: #8b4789; font-weight: bold; margin: 10px 0;"></div><p id="modalStory" style="line-height: 1.8; color: #333;"></p><div id="modalPhoto"></div></div></div>
+    <div class="timeline-container"><div class="timeline-line"></div><div id="timeline"></div></div>
+    <div id="myModal" class="modal"><div class="modal-content"><span class="close" onclick="closeModal()">&times;</span><h2 id="modalTitle"></h2><div class="date" id="modalDate" style="color: #8b4789; font-weight: bold; margin: 10px 0;"></div><p id="modalStory" style="line-height: 1.8; color: #333;"></p></div></div>
+    <footer>Made with ❤️ for my Mansu/Milky</footer>
     <script>
         const cards = [
             {date: "27/03/2023", title: "The Day Our Story Started", preview: "A normal day that secretly became the first page of 'us.'", story: "27/03/2023 was the first time our chats really started, when I replied to your status with a simple 'aww… just thought of you and saw your status.' From 'finally kisi ne number save krliya' to 'office aao phir baat krte hai,' it looked casual from outside, but for me it quietly became the first page of our story."},
@@ -58,15 +64,12 @@
             const item = document.createElement('div');
             item.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
             item.innerHTML = `
-                           item.innerHTML = `
                 <div class="timeline-card" onclick="openModal(${index})">
                     <h3>${card.title}</h3>
                     <div class="date">${card.date}</div>
                     <div class="preview">${card.preview}</div>
                 </div>
                 <div class="timeline-heart">❤️</div>
-            `;
- <footer>Made with ❤️ for my Milky</footer>
             `;
             timeline.appendChild(item);
         });
@@ -80,10 +83,15 @@
         }
         function closeModal() { modal.style.display = "none"; }
         window.onclick = function(event) { if (event.target == modal) closeModal(); }
-    <footer style="text-align: center; padding: 40px; color: #d63384; font-family: Georgia; font-style: italic;">
-        Made with ❤️ for my Mansu
-    </footer>
-                function createHeart() {
+
+        function toggleMusic() {
+            const music = document.getElementById('bgMusic');
+            const btn = document.getElementById('playPauseBtn');
+            if (music.paused) { music.play(); btn.innerText = "⏸"; }
+            else { music.pause(); btn.innerText = "▶"; }
+        }
+
+        function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('floating-heart');
             heart.innerHTML = '❤️';
@@ -93,12 +101,6 @@
             setTimeout(() => { heart.remove(); }, 5000);
         }
         setInterval(createHeart, 500);
-        function toggleMusic() {
-            const music = document.getElementById('bgMusic');
-            const btn = document.getElementById('playPauseBtn');
-            if (music.paused) { music.play(); btn.innerText = "⏸"; }
-            else { music.pause(); btn.innerText = "▶"; }
-        }
     </script>
 </body>
 </html>
