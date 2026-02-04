@@ -58,12 +58,15 @@
             const item = document.createElement('div');
             item.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
             item.innerHTML = `
+                           item.innerHTML = `
                 <div class="timeline-card" onclick="openModal(${index})">
                     <h3>${card.title}</h3>
                     <div class="date">${card.date}</div>
                     <div class="preview">${card.preview}</div>
                 </div>
-                <div class="timeline-heart">❤️</div><footer>Made with ❤️ for my Mansu/Milky</footer>
+                <div class="timeline-heart">❤️</div>
+            `;
+ <footer>Made with ❤️ for my Milky</footer>
             `;
             timeline.appendChild(item);
         });
@@ -77,7 +80,19 @@
         }
         function closeModal() { modal.style.display = "none"; }
         window.onclick = function(event) { if (event.target == modal) closeModal(); }
-
+    <footer style="text-align: center; padding: 40px; color: #d63384; font-family: Georgia; font-style: italic;">
+        Made with ❤️ for my Mansu
+    </footer>
+                function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 5000);
+        }
+        setInterval(createHeart, 500);
         function toggleMusic() {
             const music = document.getElementById('bgMusic');
             const btn = document.getElementById('playPauseBtn');
