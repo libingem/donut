@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Beautiful Journey Together, Mansi</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Georgia', serif; background: linear-gradient(135deg, #ffeef8 0%, #ffe5f1 25%, #ffd4e8 50%, #ffc4df 75%, #ffb5d6 100%); min-height: 100vh; padding: 20px; overflow-x: hidden; }
+        .header { text-align: center; padding: 40px 20px; margin-bottom: 60px; }
+        .header h1 { font-size: 3em; color: #d63384; margin-bottom: 15px; }
+        .header p { font-size: 1.3em; color: #8b4789; font-style: italic; }
+        .music-player { position: fixed; top: 20px; right: 20px; z-index: 1000; background: rgba(255, 255, 255, 0.9); padding: 10px 15px; border-radius: 50px; display: flex; align-items: center; gap: 10px; }
+        .music-player button { background: #d63384; border: none; color: white; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; }
+        .timeline-container { max-width: 1000px; margin: 0 auto; position: relative; padding: 40px 0; }
+        .timeline-line { position: absolute; left: 50%; transform: translateX(-50%); width: 4px; height: 100%; background: #d63384; }
+        .timeline-item { position: relative; margin-bottom: 80px; display: flex; justify-content: space-between; align-items: center; }
+        .timeline-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(214, 51, 132, 0.2); width: 42%; cursor: pointer; }
+        .timeline-card h3 { color: #d63384; margin-bottom: 10px; }
+        .timeline-heart { position: absolute; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; background: #d63384; border: 4px solid white; border-radius: 50%; z-index: 10; display: flex; align-items: center; justify-content: center; color: white; }
+        .timeline-item.left .timeline-card { margin-right: auto; }
+        .timeline-item.right .timeline-card { margin-left: auto; }
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); overflow: auto; }
+        .modal-content { background: white; margin: 5% auto; padding: 40px; border-radius: 20px; max-width: 700px; position: relative; }
+        .close { position: absolute; top: 20px; right: 30px; font-size: 40px; color: #d63384; cursor: pointer; }
+        @media (max-width: 768px) { .timeline-line { left: 30px; } .timeline-card { width: calc(100% - 80px); margin-left: 60px !important; } .timeline-heart { left: 30px; } }
+    </style>
+</head>
+<body>
+    <div class="music-player"><button id="playPauseBtn" onclick="toggleMusic()">▶</button><span>Mansu's Song</span></div>
+    <audio id="bgMusic" loop></audio>
+    <div class="header"><h1>Our Beautiful Journey Together, Mansi</h1><p>Every moment with you is special ❤️</p></div>
+    <div class="timeline-container"><div class="timeline-line"></div>
+    <div id="timeline"></div></div>
+    <div id="myModal" class="modal"><div class="modal-content"><span class="close" onclick="closeModal()">&times;</span><h2 id="modalTitle"></h2><div class="date" id="modalDate" style="color: #8b4789; font-weight: bold; margin: 10px 0;"></div><p id="modalStory" style="line-height: 1.8; color: #333;"></p><div id="modalPhoto"></div></div></div>
+    <script>
+        const cards = [
+            {date: "27/03/2023", title: "The Day Our Story Started", preview: "A normal day that secretly became the first page of 'us.'", story: "27/03/2023 was the first time our chats really started, when I replied to your status with a simple 'aww… just thought of you and saw your status.' From 'finally kisi ne number save krliya' to 'office aao phir baat krte hai,' it looked casual from outside, but for me it quietly became the first page of our story."},
+            {date: "18/06/2023", title: "My Best Friend's Birthday", preview: "The night I called you my best friend, already knowing you were much more.", story: "On 18/06/2023, right at midnight, I wished you 'Happy Birthday Mansi… my best friend.' It sounded simple, but even then, you were already the person I waited to talk to, the one I wanted to make smile first on your special day."},
+            {date: "23/07/2023", title: "You Were My Favorite Part", preview: "In a room full of people, you were the only reason the night felt special.", story: "After the office party on 23/07/2023, I texted you, 'you were the only reason I enjoyed.. yesterday party' and 'you are too good Mansi..' For me, that night was a realization: it doesn't matter how big the crowd is, I will always be searching for your face, your laugh, your presence."},
+            {date: "25/07/2023", title: "From White Hearts to Red Ones", preview: "We joked about white hearts and friendzone, while our hearts already knew better.", story: "On 25/07/2023, when you finally put that DP, I teased you about the white heart, saying 'white heart Mansi, red wala hi duniya dete hai… itna obvious mat karo' and 'friend zone itna obvious nahi hona chahiye.' Somewhere between those jokes, the line between 'friends' and 'something more' was already blurring."},
+            {date: "09/09/2023", title: "The Day I Started Dreaming", preview: "The night I finally admitted how hard it was to hold back my feelings.", story: "Around 09/09/2023, late at night, I confessed to you that 'the day I met you, I started dreaming.' I told you how difficult it was to hold everything inside and just act like 'normal friends.' You shared how special our bond is, that not every connection needs a tag."},
+            {date: "10/01/2024", title: "Thank You, JCI", preview: "The office that stressed us the most also gave us the best thing—each other.", story: "We both complained about JCI—queues, targets, managers, late nights—but we also admitted something important: that we are grateful to JCI because that's where we met. Those chai breaks, cab rides, and late-night calls are the foundation of everything we are today."},
+            {date: "09/02/2024", title: "Chocolate Day, 1000 km Apart", preview: "When a lost parcel and small surprises made distance feel tiny.", story: "Around Chocolate Day 2024 (09/02/2024), Amazon messed up the delivery of the pink heart chocolate I sent you. You fought with them because it wasn't just chocolate; it was 'mere baby ne mere liye bheji h 1000 km dur se.' I sent a Blinkit surprise to make up for it. Even with distance, the way we kept trying for each other made it perfect."},
+            {date: "11/02/2024", title: "Promises From the Heart", preview: "We promised more than love—we promised partnership and a future.", story: "On Promise Day, 11/02/2024, you sent a beautiful message: promising to be my partner in every adventure and my rock in every storm. Together we'll walk every road—trusting and believing in each other at every step. That day, it felt like we quietly shook hands on a future together."},
+            {date: "10/02/2024", title: "Your Teddy, My Hug", preview: "Soft toys, long messages and the feeling that I'm always wrapped around you.", story: "During Teddy Day and Hug Day 2024, you wrote the most adorable messages—calling me your baby, your comfort. You told me that every hug from me feels like a warm blanket on a cold day. You are my safe place, my softest comfort, and the person I always want in my arms."},
+            {date: "21/01/2025", title: "My Birthday, With You Beside Me", preview: "The first birthday where you weren't just on the phone—you were actually here.", story: "18-21/01/2025 was the first time you celebrated my birthday with me in person. No more video call wishes—this time you were right there, planning everything. Your smile, your excitement, and your effort made it the best birthday I've ever had. It's about who you spend it with."},
+            {date: "14/02/2025", title: "My Starlight's Valentine", preview: "You turned Valentine's Day into a full love festival with words and effort.", story: "Around 14/02/2025, you went all out. You sent pastries, wrote a long heartfelt paragraph, and signed off as 'Your Starlight.' You described how falling in love with me has been the best thing. That Valentine was about how deeply you see me and choose me."},
+            {date: "14/02/2025", title: "For My Starlight, With Love", preview: "From pastry jars to late-night calls, I just wanted to match your love.", story: "Those same days, I tried to surprise you back—sending pastry jars and cheesecakes even when shops were closing. Your excited reactions and happy voice made every minute of planning worth it. Love is about equal effort and equal excitement for each other."},
+            {date: "18/06/2025", title: "Her Birthday, Finally Together", preview: "The day we finally celebrated you in person, the way you always deserved.", story: "On 18/06/2025, I finally got to be there with you in person. I saw your real smile when you opened gifts, held your hand while cutting the cake, and watched your eyes light up. All the distance and waiting were finally becoming our reality."},
+            {date: "10/02/2025", title: "My Squishy Hotness", preview: "The day you called me your squishy hotness and poured your whole heart out.", story: "On Hug Day, 10/02/2025, you called me 'my squishy hotness, my comfort, my everything.' You wrote about sending me the tightest, warmest hug. I read that message multiple times, smiling like an idiot, because it captured exactly how I want to be for you: your peace and safe place."},
+            {date: "14/02/2025", title: "My Heart, My Home", preview: "When you wrote that I'm your heart, your home, your everything.", story: "On Valentine's Day, 14/02/2025, you told me that loving me has been the most fulfilling thing, that I am your heart, your home, your everything. You wrote how I bring you happiness you never imagined. I want this website to freeze these feelings in time for you."},
+            {date: "Future", title: "All the Tomorrows With You", preview: "From Jaipur plans to bath-tub stays and biryani dates—our future already looks beautiful.", story: "My favourite parts are when we plan the future: trips to Jaipur, royal palaces, watching movies on a curved screen, and simple dinners eating biryani from the same plate. Every 'we'll go here' is a tiny promise of a life where we keep collecting memories side by side."}
+        ];
+
+        const timeline = document.getElementById('timeline');
+        cards.forEach((card, index) => {
+            const item = document.createElement('div');
+            item.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
+            item.innerHTML = `
+                <div class="timeline-card" onclick="openModal(${index})">
+                    <h3>${card.title}</h3>Create timeline.html for Mansu website
+                    <div class="date">${card.date}</div>
+                    <div class="preview">${card.preview}</div>
+                </div>
+                <div class="timeline-heart">❤️</div>
+            `;
+            timeline.appendChild(item);
+        });
+
+        const modal = document.getElementById('myModal');
+        function openModal(index) {
+            document.getElementById('modalTitle').innerText = cards[index].title;
+            document.getElementById('modalDate').innerText = cards[index].date;
+            document.getElementById('modalStory').innerText = cards[index].story;
+            modal.style.display = "block";
+        }
+        function closeModal() { modal.style.display = "none"; }
+        window.onclick = function(event) { if (event.target == modal) closeModal(); }
+
+        function toggleMusic() {
+            const music = document.getElementById('bgMusic');
+            const btn = document.getElementById('playPauseBtn');
+            if (music.paused) { music.play(); btn.innerText = "⏸"; }
+            else { music.pause(); btn.innerText = "▶"; }
+        }
+    </script>
+</body>
+</html>
